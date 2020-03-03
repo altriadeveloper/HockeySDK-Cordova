@@ -184,11 +184,20 @@
 
 - (void) trackEvent:(CDVInvokedUrlCommand *)command {
     CDVPluginResult* pluginResult = nil;
-    BITMetricsManager *metricsManager = [[BITHockeyManager sharedHockeyManager] metricsManager];
+    BITMetricsManager* metricsManager = [[BITHockeyManager sharedHockeyManager] metricsManager];
     NSString *eventName = [command argumentAtIndex:0 withDefault:nil andClass:[NSString class]];
+    NSDictionary* properties = nil;
+    NSDictionary* measurements = nil;
+    
+    if ([command.arguments count] > 1) {
+        properties = [command.arguments objectAtIndex:1];
+        measurements = [command.arguments objectAtIndex:2];
+    }
+    
     if (initialized == YES) {
         if (eventName) {
-            [metricsManager trackEventWithName:eventName];
+            //[metricsManager trackEventWithName:eventName];
+            [metricsManager trackEventWithName:eventName properties:properties measurements:measurements];
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         } else {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
